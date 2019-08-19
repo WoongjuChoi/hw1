@@ -31,19 +31,19 @@ Finally, wait() is a system call that stops the execution of the parent process.
 1.	(optional) You can specify different shell prompt using getenv function. (e.g. your current working directory (PWD, TIME, USER, etc.)
 1.	(optional) You can take additional input parameters for the executing program, and pass them to the created process. Please find manual pages of execve system call.
 1.	Document:
-  1.	You should include some report for your code project, hw, etc.
-  1.	The report should include general/brief introduction to your program.
-  1.	The report should include specific instruction to make your program.
-  1.	The report should include specific working example. (screen capture, whatever)
-  1.	The report can include your personal ideas, feedback messages to me.
+    1.	You should include some report for your code project, hw, etc.
+    1.	The report should include general/brief introduction to your program.
+    1.	The report should include specific instruction to make your program.
+    1.	The report should include specific working example. (screen capture, whatever)
+    1.	The report can include your personal ideas, feedback messages to me.
 1.	Submission
-  1.	You have five freedays. (for all projects, homework assignments)
-  1.	Submit your code through github account, in your 'own branch'.
-  1.	Branch should be your student ID.
-  1.	Test before push. Do not push the broken code in git.
+    1.	You have five freedays. (for all projects, homework assignments)
+    1.	Submit your code through github account, in your 'own branch'.
+    1.	Branch should be your student ID.
+    1.	Test before push. Do not push the broken code in git.
 1.	Evaluation
-  1.	It’s better if your code is different from the others.
-  1.	More functionalities, more error handling is better.
+    1.	It’s better if your code is different from the others.
+    1.	More functionalities, more error handling is better.
 
 No restrictions on working environment, if it supports POSIX standard programming interface. However, I strongly recommend you to stick to assam server; you may have different working environment, according to the running platform (OS).
 
