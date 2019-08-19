@@ -22,12 +22,12 @@ Finally, wait() is a system call that stops the execution of the parent process.
 1.	Start of SiSH: by entering the executable filename, your shell starts.
 1.	End of Sish: SiSH finishes execution when it gets ‘quit’ string from the user.
 1.	Operation of SiSH:
-  1.	Input: takes program name as input string
-  1.	Execution: it has to execute every single executable program in the filesystem, if it has proper privilege
-  1.	Execution path: to simplify (contract) the filename (full path beginning with ‘/’), SiSH should look into directories, in PATH environment variable.
-  1.	PATH environment variable holds the ‘:’-separated string, that specifies multiple locations in the filesystem.
-  1.	During the execution of the user-input program, shell should not be active.
-  1.	Repetition: When the given program completes its execution, it receives the next input string, to run another program.
+    1.	Input: takes program name as input string
+    1.	Execution: it has to execute every single executable program in the filesystem, if it has proper privilege
+    1.	Execution path: to simplify (contract) the filename (full path beginning with ‘/’), SiSH should look into directories, in PATH environment variable.
+    1.	PATH environment variable holds the ‘:’-separated string, that specifies multiple locations in the filesystem.
+    1.	During the execution of the user-input program, shell should not be active.
+    1.	Repetition: When the given program completes its execution, it receives the next input string, to run another program.
 1.	(optional) You can specify different shell prompt using getenv function. (e.g. your current working directory (PWD, TIME, USER, etc.)
 1.	(optional) You can take additional input parameters for the executing program, and pass them to the created process. Please find manual pages of execve system call.
 1.	Document:
