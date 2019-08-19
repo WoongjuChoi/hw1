@@ -2,7 +2,8 @@
 HW1: Simple MyShell
 
 Operating Systems & Adv. Mobile project HW1: simple Shell (SiSH)
-Due by Sep. 30
+
+**Due by Sep. 30**
 
 Introduction
 Shell is a small program that allows a user to directly interact with your operating system. A user can command (give orders) to run program through shell. To do that, shell takes input string from a user, and make it run. When the specified program completes its execution, the shell takes another input to run another program.
@@ -38,7 +39,7 @@ Finally, wait() is a system call that stops the execution of the parent process.
     1.	The report can include your personal ideas, feedback messages to me.
 1.	Submission
     1.	You have five freedays. (for all projects, homework assignments)
-    1.	Submit your code through github account, in your 'own branch'.
+    1.	Submit your code through github account, in **your own branch**.
     1.	Branch should be your student ID.
     1.	Test before push. Do not push the broken code in git.
 1.	Evaluation
