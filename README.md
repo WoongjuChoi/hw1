@@ -19,35 +19,31 @@ Finally, wait() is a system call that stops the execution of the parent process.
 
 # Specific requirements
 1.	(optional) make & compile: write a makefile that compiles your code. I will just type make on the terminal.
-2.	Start of SiSH: by entering the executable filename, your shell starts.
-3.	End of Sish: SiSH finishes execution when it gets ‘quit’ string from the user.
-4.	Operation of SiSH:
-  a.	Input: takes program name as input string
-  b.	Execution: it has to execute every single executable program in the filesystem, if it has proper privilege
-  c.	Execution path: to simplify (contract) the filename (full path beginning with ‘/’), SiSH should look into directories, in PATH environment variable.
-  d.	PATH environment variable holds the ‘:’-separated string, that specifies multiple locations in the filesystem.
-  e.	During the execution of the user-input program, shell should not be active.
-  f.	Repetition: When the given program completes its execution, it receives the next input string, to run another program.
-
-5.	(optional) You can specify different shell prompt using getenv function. (e.g. your current working directory (PWD, TIME, USER, etc.)
-6.	(optional) You can take additional input parameters for the executing program, and pass them to the created process. Please find manual pages of execve system call.
-
-7.	Document:
-  a.	You should include some report for your code project, hw, etc.
-  b.	The report should include general/brief introduction to your program.
-  c.	The report should include specific instruction to make your program.
-  d.	The report should include specific working example. (screen capture, whatever)
-  e.	The report can include your personal ideas, feedback messages to me.
-
-8.	Submission
-  a.	You have five freedays. (for all projects, homework assignments)
-  b.	Submit your code through github account, in your 'own branch'.
-  c.	Branch should be your student ID.
-  d.	Test before push. Do not push the broken code in git.
-
-9.	Evaluation
-  a.	It’s better if your code is different from the others.
-  b.	More functionalities, more error handling is better.
+1.	Start of SiSH: by entering the executable filename, your shell starts.
+1.	End of Sish: SiSH finishes execution when it gets ‘quit’ string from the user.
+1.	Operation of SiSH:
+  1.	Input: takes program name as input string
+  1.	Execution: it has to execute every single executable program in the filesystem, if it has proper privilege
+  1.	Execution path: to simplify (contract) the filename (full path beginning with ‘/’), SiSH should look into directories, in PATH environment variable.
+  1.	PATH environment variable holds the ‘:’-separated string, that specifies multiple locations in the filesystem.
+  1.	During the execution of the user-input program, shell should not be active.
+  1.	Repetition: When the given program completes its execution, it receives the next input string, to run another program.
+1.	(optional) You can specify different shell prompt using getenv function. (e.g. your current working directory (PWD, TIME, USER, etc.)
+1.	(optional) You can take additional input parameters for the executing program, and pass them to the created process. Please find manual pages of execve system call.
+1.	Document:
+  1.	You should include some report for your code project, hw, etc.
+  1.	The report should include general/brief introduction to your program.
+  1.	The report should include specific instruction to make your program.
+  1.	The report should include specific working example. (screen capture, whatever)
+  1.	The report can include your personal ideas, feedback messages to me.
+1.	Submission
+  1.	You have five freedays. (for all projects, homework assignments)
+  1.	Submit your code through github account, in your 'own branch'.
+  1.	Branch should be your student ID.
+  1.	Test before push. Do not push the broken code in git.
+1.	Evaluation
+  1.	It’s better if your code is different from the others.
+  1.	More functionalities, more error handling is better.
 
 No restrictions on working environment, if it supports POSIX standard programming interface. However, I strongly recommend you to stick to assam server; you may have different working environment, according to the running platform (OS).
 
