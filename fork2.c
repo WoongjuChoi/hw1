@@ -30,7 +30,7 @@ void child_handler(int signo)
 
 	// send signal to child
 
-	if (count > 3) flag=1;
+	if (count >= 3) flag=1;
 }
 int main()
 {
@@ -69,12 +69,12 @@ int main()
 			sigaction(SIGUSR1, &new_sa, &old_sa);
 
 
-			printf("pid: %d, done. make sure you're not creating additional proc.\n", 
-				getpid());
-			count = 0;	
+			count = 0;
+			flag = 0;
 			while (!flag) {
 				sleep(1);
 			}
+			printf("pid: %d, done. make sure you're not creating additional proc.\n", getpid());
 			return 0;
 		} else {
 			// parent
