@@ -1,9 +1,9 @@
-# 2019_os_hw1
+# 2020_os_hw1
 HW1: Simple MyShell
 
 Operating Systems & Adv. Mobile project HW1: simple Shell (SiSH)
 
-**Due by March 30**
+**Updated! Due by April 6th**
 
 Introduction
 Shell is a small program that allows a user to directly interact with your operating system. A user can command (give orders) to run program through shell. To do that, shell takes input string from a user, and make it run. When the specified program completes its execution, the shell takes another input to run another program.
