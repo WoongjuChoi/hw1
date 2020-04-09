@@ -18,10 +18,13 @@ int main(int argc, char *argv[])
 		}
 		else if (pid == 0) {
 			// child
+			i++;
 			printf("child process with pid %d (i: %d) \n", getpid(), i);
 			exit (0);
 		} else {
 			// parent
+			i=i+2;
+			printf("parent process with pid %d (i: %d) \n", getpid(),i);
 			wait(0);
 		}
 	}
