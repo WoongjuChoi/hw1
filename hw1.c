@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>    //for system(exit() etc...)
-#include <unistd.h>    //for execvp(), fork() 
+#include <unistd.h>    //for execve(), fork() 
 #include <string.h>  
 #include <sys/wait.h>  //for wait()
 #include <sys/types.h>
-#include <fcntl.h>
 #include <errno.h>
 #include <stdbool.h>   //for boolean type
+// #include <fcntl.h>
 
 char* tokens[256];
 
@@ -39,7 +39,6 @@ void changeDir()
 bool run(char* line)
 {
 	int token_count;
-	int index;
 	int status;
 	char* cut_path;       //PATH 경로를 parsing 하고 그 결과를 받는 포인터
     char copy_path[500];  //PATH 경로를 받아오는 문자형 배열
@@ -78,8 +77,8 @@ bool run(char* line)
 	//child process 코드
 	else if(pid == 0)                 
 	{
-		while(execve(new_path,tokens,NULL)== -1){  //맞는 PATH가 모두 검색해도 없을 경우 탈출
-			if(!(cut_path = strtok(NULL, ":")))
+		while(execve(new_path,tokens,NULL)== -1){
+			if(!(cut_path = strtok(NULL, ":")))  //맞는 PATH가 모두 검색해도 없을 경우 탈출
 				break;
 			// 다시 명령어를 입력받기 위한 작업
 			strcpy(new_path, cut_path);
