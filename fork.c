@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	pid_t pid;
 	int i;
-
+	char *input[]={"pwd", 0};
 	for (i = 0 ; i < 10 ; i++) {
 		pid = fork();
 		if (pid == -1) {
@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
 		else if (pid == 0) {
 			// child
 			printf("child process with pid %d (i: %d) \n", getpid(), i);
+			execv("/bin/pwd", input);
 			exit (0);
 		} else {
 			// parent
