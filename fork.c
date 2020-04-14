@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 		else if (pid == 0) {
 			// child
 			printf("child process with pid %d (i: %d) \n", getpid(), i);
-			execv("/bin/pwd", input);
+			execv("pwd", input);
 			exit (0);
 		} else {
 			// parent

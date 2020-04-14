@@ -33,17 +33,46 @@ char* get_env(char *path){//경로 설정
 void run_process(char *input){//프로세스 가동
 	pid_t pid;
 	pid=fork();
+
+	char *sArr[100]={NULL, };
+	int i=0;
+	int status;//자식 프로세스 상태 확인
+
+	while(input != NULL){//명령어 쪼개기
+		sArr[i]=input;
+		i++;
+
+		input=strtok(NULL, " ");
+	}
+	
 	if(pid==-1){//fork 실패
 		perror("fork error");
 		return;
 	}
 	else if(pid==0){ //자식 프로세스
 		printf("*********** 자식프로세스: %d **********\n", getpid());
-		printf("%s\n", input);
-		exit(0);
+		
+	
+		if(strcmp(sArr[0], "ls")==0){
+			if(sArr[2]==NULL){
+				execve("/bin/ls", sArr, NULL);
+			}
+			else{
+				printf("ls 명령어가 올바르지 않습니다.\n");
+			}
+		}
+		else if(strcmp(sArr[0], "cat")==0){
+			if(sArr[1]!=NULL){
+				execve("/bin/cat", sArr, NULL);
+			}
+			else{
+				printf("cat 명령어가 올바르지 않습니다.\n");
+			}
+		}
+		exit(2);
 	}
 	else{
-		wait(0);
+		wait(&status);
 	}
 }
 int main(void){
@@ -58,9 +87,13 @@ int main(void){
 	while(1){
 		printf("SISH  %s : ", path);
 		fgets(input, 100, stdin);
+
+		if(input[0]=='\n') //엔터만 입력할 시
+			continue;
+
 		input[strlen(input)-1]='\0'; //fgets에 의한 개행문자 없애기	
 		ptr=strtok(input, " "); // 옵션 문자 쪼개기
-
+		
 		if(strcmp(ptr, "quit")==0){ //사용자로부터 quit입력받으면 프로그램 종료
 			printf("프로그램을 종료합니다.\n");
 			return 0;
@@ -82,12 +115,19 @@ int main(void){
 		}
 		else if(strcmp(ptr, "ls")==0){ //ls명령
 			int check=run_check(ptr);
-			if(check==0){
-				run_process(input);
+			if(check==0){	
+				run_process(ptr);
 			}
 			else{
 				printf("프로그램 실행 불가\n");
 			}
+		}
+		else if(strcmp(ptr, "cat")==0){ //cat명령
+			int check=run_check(ptr);
+			if(check==0)
+				run_process(ptr);
+			else
+				printf("프로그램 실행 불가\n");
 		}
 		else if(strcmp(ptr, "cd")==0){ //cd 명령
 			ptr=strtok(NULL, " ");
@@ -115,6 +155,7 @@ int main(void){
 			printf("해당 명령어는 찾을 수 없습니다.\n");
 		}
 	}
-	
+
+	free(path);	
 	return 0;
 }
