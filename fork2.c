@@ -35,7 +35,7 @@ void child_handler(int signo)
 int main()
 {
 	int i = 0;
-
+	int a = 0;
 	struct sigaction old_sa;
 	struct sigaction new_sa;
 
