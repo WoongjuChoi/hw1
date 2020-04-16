@@ -51,3 +51,5 @@ No restrictions on working environment, if it supports POSIX standard programmin
 No copy allowed. Please push your code in github hw1, in different branches. Do not push your code to master branch! Note that you can look at others’ code, and vice versa.
 
 Different code implies better evaluation. Enjoy your system-level programming!
+
+--------------------------------------------------
