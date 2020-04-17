@@ -1,4 +1,6 @@
-#include <stdio.h)
-int main(void) {
-	pringf("hello"):
+#include <stdio.h>
+int main()
+{
+	printf("hello");
+	
 }
