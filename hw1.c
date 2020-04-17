@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <stdbool.h>   //for boolean type
-// #include <fcntl.h>
 
 char* tokens[256];
 
@@ -46,7 +45,10 @@ bool run(char* line)
 
 	pid_t pid;  //ID값을 저장할 변수
 	token_count = tokenize(line,sizeof(tokens)/sizeof(char*));
-
+	
+	if(token_count=0)
+		return true;
+	
 	if(strcmp(tokens[0],"quit")==0)
 	{
 		printf("------------!!quit!!------------\n");
