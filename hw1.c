@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <stdbool.h>   //for boolean type
+#include <time.h>      //for time function
 
 char* tokens[256];
 
@@ -103,11 +104,16 @@ bool run(char* line)
 int main()
 {
 	char line[1024];
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	
 	printf("종료를 원하시면 quit을 입력하세요.\n");
-
 	while(1)
 	{
-		printf("[sunjun's shell] $ ");
+		printf("%s@",getenv("USER"));  //USER prompt using getenv()
+		printf("%s",getenv("PWD"));    //PWD prompt using getenv() 
+		printf(" <%d-%d-%d %d:%d:%d>~$ ",tm.tm_year+1900, tm.tm_mon+1,  //TIME prompt
+			   tm.tm_mday,tm.tm_hour,tm.tm_min,tm.tm_sec);
 		fgets(line,sizeof(line),stdin);
 		if(run(line) == false)
 			break;
