@@ -30,8 +30,10 @@ int args_sz;
 char** path_dirs; // paths
 int path_dirs_sz;
 
-extern char **environ; // 환경 변수의 모든것
+extern char **environ; // 응용 프로그램의 전체 환경변수를 가져옵니다.
 
+
+// 호스트 이름, 유저 정보를 가져옵니다.
 void set_basic_environment()
 {
   memset(hostname, '\0', 1024);
@@ -42,6 +44,7 @@ void set_basic_environment()
 }
 
 
+// 사용자로부터 명령어를 입력받고, 파싱합니다.
 void receive_commandline()
 {
     input:
@@ -49,7 +52,6 @@ void receive_commandline()
     // format: username@hostname:DIR $
     printf("%s@%s:%s $ ", user, hostname, workspace);
     fgets(user_input, MAX_USER_INPUT_SIZE - 1, stdin);
-    // scanf(" %s") => 문자열이 분리되서 입력됩니다.
 
     int user_input_sz = strlen(user_input) - 1;
     // 명령어가 아무것도 입력 안됨
@@ -57,14 +59,9 @@ void receive_commandline()
 
     user_input[user_input_sz] = '\0';
 
+    // 공백으로 프로세스 실행 인자값을 파싱합니다.
     int input_sz = 0;
-
-    // parsing commandline!!!
-    // 그런데... results 가 반환되면 그 크기는?
     char** results = split_str(user_input, " ", &input_sz);
-
-    // 하나밖에 없다면
-    // 본래 "" 등 다양한 문자열로 파싱해서 넣어줘야 하지만.. 우선 여기까지..
 
     args_sz = input_sz;
     if (args_sz) args = results;
@@ -72,8 +69,6 @@ void receive_commandline()
     command = results[0];
 
     #ifdef DEBUG
-    // 만들어놓고 보니 count값이 필요가 있는가?
-    // char와 마찬가지로 버퍼 마지막에 NULL을 붙여놓았음.
     printf("user_input: %s\n", user_input);
     printf("input size: %d\n", input_sz);
     printf("arguments size: %d\n", args_sz);
@@ -82,6 +77,7 @@ void receive_commandline()
 }
 
 
+// 프로그램이 위치하는 경로를 찾고, 실행합니다. 
 void execute_command()
 {
     char* executable = NULL;
@@ -93,8 +89,9 @@ void execute_command()
        executable = command;
     }
 
+    // 전체 PATH에서 사용자가 입력한 프로그램을 찾습니다.
     else
-    { // 전체 경로에서 찾아냅니다.
+    {
       for (int i = 0; i < path_dirs_sz; i++)
       {
          char* path = path_dirs[i];
@@ -111,7 +108,6 @@ void execute_command()
               break;
          }
       }
-       // 전체 경로와 경로를 합친 걸 확인합니다.
     }
 
     if (executable == NULL)
@@ -126,17 +122,15 @@ void execute_command()
     printf("exeuctable v = %p\n", executable);
     #endif
 
-   // 먼저 명령어가 존재하는지 찾습니다.
    int pid = fork();
    int status_exit = 0;
 
-   if (pid == -1)
+   if (pid == -1) // fork() 실패
    {
       perror("[X] Oops.. something went wrong while forking!!");
       exit(-1);
    }
-   // 자식 프로세스에서는 해당 프로그램을 실행합니다.
-   else if (pid == 0)
+   else if (pid == 0) // 자식 프로세스에서 사용자 명령 실행
    {
       // args[0] 번째 주소를 변경해줍니다.
       args[0] = executable;
@@ -144,8 +138,7 @@ void execute_command()
       // execve => 0번째 인자값과 args[0]값이 동일해야함.
       execve(executable, args, environ);
    }
-   // 부모 프로세스에서는 자식 프로세스가 끝날 때까지 기다립니다.
-   else
+   else // 부모 프로세스에서 자식 프로세스가 완료되기를 기다림
    {
       wait(&status_exit);
    }
@@ -157,33 +150,18 @@ int main(int argc, char * argv[])
 	path_dirs = split_str(getenv("PATH"), ":", &path_dirs_sz);
   set_basic_environment();
 
-  // #ifdef DEBUG
-  // printf("check my path_dirs!!");
-	// for (int i = 0; path_dirs[i] != 0; i++)
-	// {
-	// 		printf("%p : %s\n", path_dirs[i], path_dirs[i]);
-	// }
-  // printf("-------------------------------------\n");
-  // #endif
-
-  set_basic_environment();
-
   while (1)
   {
     receive_commandline();
-
     if (strcmp(command, "quit") == 0)
     {
         printf("Bye.\n");
         return 0;
     }
-
     execute_command();
-
-    // TODO: cmdline => argument, command parsing, trim
   }
 
-	// free HOMEs
+	// PATH 경로 저장을 위해 동적 할당했던 메모리를 해제
 	for (int i = 0; path_dirs[i] != 0; i++) free(path_dirs[i]);
 	free(path_dirs);
 
