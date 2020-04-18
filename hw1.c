@@ -41,8 +41,8 @@ bool run(char* line)
 	int token_count;
 	int status;
 	char* cut_path;       //PATH 경로를 parsing 하고 그 결과를 받는 포인터
-    char copy_path[500];  //PATH 경로를 받아오는 문자형 배열
-    char new_path[500];   //PATH 경로를 수정하여 저장할 문자형 배열
+    	char copy_path[500];  //PATH 경로를 받아오는 문자형 배열
+    	char new_path[500];   //PATH 경로를 수정하여 저장할 문자형 배열
 
 	pid_t pid;  //ID값을 저장할 변수
 	token_count = tokenize(line,sizeof(tokens)/sizeof(char*));
