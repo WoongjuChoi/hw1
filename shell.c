@@ -77,6 +77,7 @@ static COMMAND builtin_cmds[] =
 int main(int argc, char**argv)
 {
 	int i;
+	char * cwd = (char *) get_current_dir_name ();
 	sigset_t set;
 	
 	sigfillset(&set);
@@ -90,7 +91,7 @@ int main(int argc, char**argv)
 	
     while (1) {
         fputs(prompt, stdout);
-        printf( "[%d] $ ", get_current_dir_name() );
+        printf( "[%s] $ ", get_current_dir_name() );
         fgets(cmdline, BUFSIZ, stdin);
         cmdline[ strlen(cmdline) -1] ='\0';
 		execute_cmdline(cmdline);
