@@ -29,7 +29,10 @@ int main(int argc,char *argv[],char *envp[]){
 		    vecl[i]=token;
 		    token=strtok(NULL,"");
 		    i++;
-		   }
+		  }
+	        if(!strncmp(cmd,"quit",strlen(cmd))){
+			       return -1;
+		}
              if(fork()==0){
 		     char path[100]="/bin/";
 		     strcat(path,vecl[0]);
