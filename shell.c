@@ -37,7 +37,7 @@ int main()
 		pid_child = wait(&status);
 		printf("Child pid = %d\n", pid_child);
 	}
-	printf("---The end---");
+	printf("---The end---\n");
 	return 0;
 
 }
