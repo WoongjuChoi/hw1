@@ -6,17 +6,10 @@
 
 void type_prompt()
 {
-	static int first_time = 1;
-	if (first_time)
-	{
-		const char* CLEAR_SCREEN = "\e[1;1H\e[2J";
-		write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);
-		first_time = 0;
-	}
 	pritf("#");
 }
 
-void real_command(char cmd[], char* par[])
+void read_command(char cmd[], char* par[])
 {
 	char line[1024];
 	int count = 0, i = 0, j = 0;
@@ -56,7 +49,7 @@ int main(void)
 		else {
 			strcpy(cmd, "/bin/");
 			strcat(cmd, command);
-			exeve(cmd, parameters, envp);
+			execve(cmd, parameters, envp);
 		}
 		if (strcmp(command, "exit") == 0)
 			break;
