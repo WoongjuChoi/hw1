@@ -21,6 +21,7 @@ int print_prompt(){
 	free(buffer);
         return 0;
 }
+
 int main(int argc,char *argv[],char *envp[]){
        char c;
        char cmd[80];
@@ -41,14 +42,30 @@ int main(int argc,char *argv[],char *envp[]){
              if(!strcmp(vecl[0],"quit")){
 		     exit(1);
 		    }
+
              if(fork()==0){
+	         if((!strcmp(vecl[0],"ls"))|(!strcmp(vecl[0],"cat"))|(!strcmp(vecl[0],"pwd"))){
 		     char path[100]="/bin/";
 		     strcat(path,vecl[0]);
 		     execve(path,vecl,envp);
+		  }
+		 if(!strcmp(vecl[0],"cd")){
+		     char *n_path;
+		     n_path=getcwd(NULL,MAX_PATH);
+		     if(vecl[1]==NULL){
+			     chdir(getenv("HOME"));
+			     n_path=getcwd(NULL,MAX_PATH);
+		      }
+		      else{
+			      n_path=getcwd(n_path,MAX_PATH);
+			   }
+			free(n_path);   
+		   }
 		     exit(0);
 	     }
 	     else{
 		     wait(0);
+		     printf("부모실행\n");
 		     print_prompt();
 		 }
        }
