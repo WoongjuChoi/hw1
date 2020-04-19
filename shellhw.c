@@ -50,22 +50,29 @@ int main(int argc,char *argv[],char *envp[]){
 		     execve(path,vecl,envp);
 		  }
 		 if(!strcmp(vecl[0],"cd")){
+	             char *wrd;
+		     char *context;
+		     const char *delim="cd ";
+		     wrd=strtok_r(vecl[0],delim,&context);
 		     char *n_path;
-		     n_path=getcwd(NULL,MAX_PATH);
-		     if(vecl[1]==NULL){
+		     char *cdbuffer=(char *)malloc(MAX_PATH);
+		 
+		     if(wrd==NULL){
 			     chdir(getenv("HOME"));
-			     n_path=getcwd(NULL,MAX_PATH);
+			     n_path=(char *)getcwd(cdbuffer,MAX_PATH);
+			     fprintf(stdout,"dir:%s\n",cdbuffer);
 		      }
 		      else{
-			      n_path=getcwd(n_path,MAX_PATH);
-			   }
-			free(n_path);   
+			      chdir(getenv(wrd));
+			      n_path=(char *)getcwd(cdbuffer,MAX_PATH);
+		              fprintf(stdout,"ndir:%s\n",cdbuffer);
+			  }
+			free(cdbuffer);   
 		   }
 		     exit(0);
 	     }
 	     else{
 		     wait(0);
-		     printf("부모실행\n");
 		     print_prompt();
 		 }
        }
