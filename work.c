@@ -9,14 +9,13 @@
 
 int main(int argc, char *argv[])
 {
-	char input[254];	//사용자 입력을 위한 배열 및 수정한 *argv를 저장하기 위한 배열
+	char input[254];	//사용자 입력을 저장하기 위한 배열 및 수정한 *argv를 저장하기 위한 배열
 	char* new_argv[254];//수정한 **argv를 저장하기 위한 배열
 	int new_argc;       //수정한 argc를 저장하기 위한 변수
 	char* cut_path;     //PATH 경로를 parsing 하고 그 결과를 받는 포인터
 	char copy_path[254];//PATH 경로를 받아오는 문자형 배열
 	char new_path[254]; //PATH 경로를 수정하여 저장할 문자형 배열
 	pid_t pid;          //자식프로세스의 ID 값을 저장할 변수
-	char command[64];  //USER의 명령어를 저장할 문자형 배열
 	char buf[255];		//현재 위치를 얻어오기 위한 문자형 배열
 	new_argc = argc;    //무한 루프를 돌기 전 받아온 argc를 저장
 
@@ -25,7 +24,7 @@ int main(int argc, char *argv[])
 			getcwd(buf, 255);	//현재 위치 얻기
 			printf("\033[1;33mhw1\033[0m:");				//글씨 색 추가 및 유저정보와 주소정보 표시
 			printf("\033[0;34m%s\033[0m:",getenv("USER"));
-			printf("\033[0;32m%s~$\033[0m", buf);
+			printf("\033[0;32m%s:~$\033[0m", buf);
 			fgets(input, sizeof(input), stdin);		//input
 			new_argv[0] = strtok(input, " ");            // input parsing
 		}
@@ -39,22 +38,23 @@ int main(int argc, char *argv[])
 		new_argv[new_argc - 1] = strtok(new_argv[new_argc - 1], "\n");
 		//마지막 글자 뒤에 NULL 포인터 입력
 		new_argv[new_argc] = (char*)NULL;
-		strcpy(command, new_argv[0]);    //command를 복사
-		if (strcmp(command, "quit") == 0 || strcmp(input, "QUIT") == 0) {   //프로그램 종료
+		strcpy(input, new_argv[0]);    //command를 복사
+		if (strcmp(input, "quit") == 0 || strcmp(input, "QUIT") == 0) {   //프로그램 종료
 			printf("프로그램이 종료됩니다. \n");
 			return 0;
 		}
 		if (strcmp(input, "help") == 0) {
 			printf("quit 또는 QUIT을 입력하면 프로그램이 종료됩니다. \n");	//도움말 
+		}if (strcmp(input, "cd") == 0) {	//cd 구현
+			chdir(new_argv[1]);
 		}else {
-
 			}
 		//PATH파싱
 		strcpy(copy_path, getenv("PATH"));
 		cut_path = strtok(copy_path, ":");
 		strcpy(new_path, cut_path);
 		strcat(new_path, "/");
-		strcat(new_path, command);//파싱한 PATH뒤에 명령어를 붙임
+		strcat(new_path, input);//파싱한 PATH뒤에 명령어를 붙임
 		strcat(new_path, "");
 		pid = fork();
 		if (pid == -1) {
