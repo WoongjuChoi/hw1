@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 	pid_t pid;
 	int i;
 
-	for (i = 0 ; i < 10 ; i++) {
+	for (i = 0 ; i < 5  ; i++) {
 		pid = fork();
 		if (pid == -1) {
 			perror("fork error");
@@ -22,9 +22,8 @@ int main(int argc, char *argv[])
 			exit (0);
 		} else {
 			// parent
-			wait(0);
+		wait(0);
 		}
 	}
 	return 0;
 }
-
