@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         int i;
         char str[255];
         printf("'list' = show list\n");
-        while (i = 0; i < 5; i++) {
+        for (i = 0; i < 5; i++) {
                 pid = fork();
                 if (pid == -1) {
                         perror("fork error");
