@@ -4,39 +4,25 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdlib.h>
-
-
 #include <string.h>   //추가하지 않으면 cut_path = strtok(copy_path, ":"); 부터 Segmentation fault 가 발생한다.
 
 
 int main(int argc, char *argv[])
 {
-	char input[254];	//사용자 입력 및 수정된 *argv를 저장하기 위한 배열
-
-
-
+	char input[254];	//사용자 입력을 위한 배열 및 수정한 *argv를 저장하기 위한 배열
 	char* new_argv[254];//수정한 **argv를 저장하기 위한 배열
-
 	int new_argc;       //수정한 argc를 저장하기 위한 변수
-
 	char* cut_path;     //PATH 경로를 parsing 하고 그 결과를 받는 포인터
 	char copy_path[254];//PATH 경로를 받아오는 문자형 배열
 	char new_path[254]; //PATH 경로를 수정하여 저장할 문자형 배열
 	pid_t pid;          //자식프로세스의 ID 값을 저장할 변수
-
 	char command[64];  //USER의 명령어를 저장할 문자형 배열
 	char buf[255];		//현재 위치를 얻어오기 위한 문자형 배열
-
 	new_argc = argc;    //무한 루프를 돌기 전 받아온 argc를 저장
 
-
-
-
-
 	while (1) {		//while문 
-
 		if (new_argc == 1) {
-			getcwd(buf, 255);
+			getcwd(buf, 255);	//현재 위치 얻기
 			printf("\033[1;33mhw1\033[0m:");				//글씨 색 추가 및 유저정보와 주소정보 표시
 			printf("\033[0;34m%s\033[0m:",getenv("USER"));
 			printf("\033[0;32m%s~$\033[0m", buf);
@@ -63,11 +49,6 @@ int main(int argc, char *argv[])
 		}else {
 
 			}
-
-
-
-
-
 		//PATH파싱
 		strcpy(copy_path, getenv("PATH"));
 		cut_path = strtok(copy_path, ":");
@@ -101,9 +82,6 @@ int main(int argc, char *argv[])
 		}
 		//쉘로 다시 만들어주기 위해서는 다시 COMMAND LINE을 받도록 해야한다.
 		new_argc = 1;
-
-
-
 	}
 	return 0;
 }
