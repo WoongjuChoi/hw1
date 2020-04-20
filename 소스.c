@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 				printf("Filie name : %s를 검색합니다", FilenName);
 
 				char *Value;
-				Value = getenv(FilenName[1]);
+				Value = getenv(FilenName);
 
 				if (Value != NULL)
 				{
