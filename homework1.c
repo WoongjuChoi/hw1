@@ -30,11 +30,16 @@ int main(){
 	tokens[num]=strtok(input," \n");//input을띄어쓰기 기준으로  토큰으로 나눈다
 	while(1){
 	if(tokens[num] == NULL) break;//토큰이 null이면 탈출
-	printf("tokens[%d]=%s\n",num,tokens[num]);
 	num++;
 	tokens[num]=strtok(NULL," \n");//다음 토큰 정하기
 	}
-	if(strcmp(tokens[0],"cd")==0){}//cd dir 입력받기
+
+	if(strcmp(tokens[0],"cd")==0){
+		if(tokens[1]==NULL){ chdir(getenv("HOME"));}
+		else chdir(tokens[1]);
+
+		continue;
+				}//cd dir 입력받기
 
 	strcpy(AllPath,getenv("PATH"));//모든 경로 얻기
 	modified_path=strtok(AllPath,":");//경로를 :기준으로 나눈다. 첫번째 조각은 modified_path
