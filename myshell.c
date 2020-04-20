@@ -123,7 +123,7 @@ void cmd_fork(char cmd[]){ // command 'fork' - execute process
 		}
 		*/
 		else if(strcmp(cmd, "clear") == 0){ // input: clear
-			cmd_clear(cmd);
+			cmd_clear(cmd); // UDF - cmd_clear
 			exit(0);
 		}
 		else if(strcmp(cmd, "pwd") == 0){ // input: pwd
