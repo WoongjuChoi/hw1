@@ -13,7 +13,6 @@ int main(int argc, char *argv[]) {
 		bool Shell_go = true;	//루프를 돌지 안돌지에 대한 불리안값.
 		int state;
 		char str[80];
-		print("Shell 프로그램의 종료를 원할 시에, '종료'를 입력해주세요. \n");
 		pid_t pid;
 
 		while (Shell_go) {
