@@ -373,6 +373,7 @@ int main(int argc, char **argv)
 }
 ```
 
+```
 파라미터
 str
     - delimiter단위로 분리할 문자열.
@@ -393,7 +394,8 @@ NULL
     - 분리할 데이터가 더 이상없습니다.
  
 활용 예제
- 
+ ```
+ 
  ```c
 #include <string.h>
 #include <stdio.h>
