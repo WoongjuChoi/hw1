@@ -50,26 +50,20 @@ void read_command(char cmd[], char* par[])
 int main(void)
 {
 	char cmd[1000], command[100], * parameters[20]; //cmd, command는 명령어들을 저장하는 변수이다 .
-	char* envp[] = { (char*)"PATH=/BIN",0 };  
-	char quitsignal[100];
-	char* modifiedquitsignal;
-    pid_t pid;
-	pid = fork();
-    //무한루프 시작         
+	char* envp[] = { (char*)"PATH=/bin",0 };  
 	while (1) {
-		if (pid< 0)
+		type_prompt();
+		read_command(command, parameters);
+		if (fork() != 0)
+			wait(NULL);
+		else
 		{
-			wait(0);
-		}
-		else {
-			type_prompt();
-			read_command(command, parameters);
-			strcpy(cmd, "/bin/");
+			strcpy(cmd. "/bin/");
 			strcat(cmd, command);
 			execve(cmd, parameters, envp);
 		}
 		if (strcmp(command, "exit") == 0)
-			exit(0);
+			break;
 	}
 	return 0;
 }
