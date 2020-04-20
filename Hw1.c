@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h> // to use function strcmp()
-#include <dirent.h>
+#include <dirent.h> // to use function file_list
 
 void calculator(){
         int input = 0, a = 0, b = 0;
