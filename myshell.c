@@ -16,17 +16,17 @@ void function(char *command, char **sArr)
         sArr[i] = NULL;
     }
 
-    for (j = 0, str = command;; str = NULL, j++)
+    for (j = 1, str = command;; str = NULL, j++)
     {
         sArr[j] = strtok_r(str," ,\t\n", &next_ptr);
         if (sArr[j] == NULL || strcmp(sArr[j],"\n")==0)
             break;
     }
-    for (int i = 0; i < 10; i++)
-    {
-        if (sArr[i] != NULL)
-            printf("%s\n", sArr[i]);
-    }
+    // for (int i = 0; i < 10; i++)
+    // {
+    //     if (sArr[i] != NULL)
+    //         printf("%s\n", sArr[i]);
+    // }
     return;
 }
 
@@ -34,20 +34,7 @@ void function(char *command, char **sArr)
 int main(int argc, char *argv[])
 {
 	puts("myshell powered by DOSIMPACT");
-	
-	// char* s1 = (char*)malloc(sizeof(char)*100);
-	// char* s2 = (char*)malloc(sizeof(char)*100);
-	// char** new_argv = (char**)malloc(sizeof(char*)*(argc+1) );
-		
-	// char command[] = "ls";
-	// new_argv[0] = command;
-	// for(int idx = 1; idx<argc;idx++){
-	// 	new_argv[idx] = argv[idx];
-	// }
-	// new_argv[argc] = NULL;
-	
-	// execv("./child",new_argv);
-	
+
 	pid_t pid;
 	int i;
 	char userInput[100];
@@ -62,14 +49,13 @@ int main(int argc, char *argv[])
 		printf("myshell:user:pwd#");
 		fgets(userInput,100,stdin);
 		
-		if(strcmp(userInput,"quit")==0){
+		if(strcmp(userInput,"quit\n")==0){
 			puts("MY SHELL EXIT");
 			break;
 		}
-		printf("your inputs :  %s",userInput);
+		//printf("your inputs :  %s",userInput);
 		function(userInput, sArr);
-		
-		
+		sArr[0] = argv[0];
 			
 		pid = fork();
 		if(pid == -1){
@@ -77,7 +63,7 @@ int main(int argc, char *argv[])
 		}
 		else if(pid == 0){
 			// printf("childProcess... %s\n",userInput);
-			// execv("./child",&userInput);
+			execv("./child",sArr);
 			exit(0);
 		}else{
 			wait(0);
@@ -97,6 +83,6 @@ int main(int argc, char *argv[])
 
 //2. 자식 프로세스한테 fork 해서 단순히 출력해주기. ✅
 
-//2. 자식 프로세스에서, exec사용해, 단순이 인자값 출력하는 프로그램
+//2. 자식 프로세스에서, exec사용해, 단순이 인자값 출력하는 프로그램 ✅
 
 //3. getenv key 입력이 올바르면, value출력해 주기
