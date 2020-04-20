@@ -153,7 +153,428 @@ PWD=/workspace/OSLecture/hw1master
 ```
 
 
+# 프로그램에 사용된 코드 스니펫
 
+
+## 0. 매개변수 출력 
+
+
+```c
+#include<stdio.h>
+#include<stdlib.h>
+
+int main(int argc,char* argv[]){
+	printf("argv print .. \n");
+	for(int i = 1 ; i < argc;i++){
+		printf("%s\n",argv[i]);
+	}
+	return 0;
+}
+
+```
+
+## 1. fork example01
+
+```c
+
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+// getpid() 현재 pid, getppid() 부모 pid
+// pid_t = cpid = fork() > 편안하게 프로세스의 메타정보 > 0이면 자식 프로세스이다. 0이 아니면 부모 프로세스이다. 근데, 그  0아닌 값이 자식 pid 이얌
+int main()
+{
+    printf("start...\n");
+    printf("pid: %u ppid:%u \n", getpid(), getppid());
+    pid_t cpid = fork(); //부모는 1이상 값, 자식에게는 0, 으로 분기됨
+                         //-1 이면 애러
+    if (cpid == -1)
+    {
+        perror("error fork");
+        return 1;
+    }
+    if (cpid > 0)
+    { //getpid 부모 | getppid 자식
+        printf("<parent> fork return value:%u\n", cpid);
+        printf("<parent> pid:%d ppid:%d\n", getpid(), getppid());
+        sleep(1);
+    }
+    else
+    {
+        printf("<child> fork return value:%u\n", cpid);
+        printf("<child> pid:%d ppid:%d\n", getpid(), getppid());
+    }
+    return 0;
+}
+// getpid() 나의 프로세스
+// getppid() 부모 프로세스
+/*
+pid_t cpid = fork();
+*/
+```
+
+
+## 2. fork example02
+
+- fork( ) 순간에 프로세스 분기가 일어난다.
+- fork의 반환값으로 -1 ( 애러 ) 0 이면 자식 프로세스이라는 뜻 | 0이아니면 부모 프로세스임 근대 0아닌 그값이 자식 pid임
+- getpid,getppid 로 내 pid, 부모 pid를 얻어올 수 있다.
+- for문의 i 는 아래 예제와 같이 부모 프로세스에서 fork되는 순간의 값을 복사해 온다. 그리고 그 둘은 전혀 다른 메모리공간의 주소이다.
+- wait를 통해 자식 프로세스가 exit (0) 까지 기다린다.
+
+
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+int main(int argc, char *argv[])
+{
+    pid_t pid;
+    int i;
+    for (i = 0; i < 10; i++)
+    {
+        pid = fork();
+        if (pid == -1)
+        {
+            perror("fork error");
+            return 0;
+        }
+        else if (pid == 0)
+        {
+            // child
+            i = i + 2;
+            printf("child process with pid %d (i: %d) -> parent : %d \n", getpid(), i, getppid());
+            exit(0);
+        }
+        else
+        {
+            // parent
+            printf("Parent -> %d Waiting...(i: %d) \n", getpid(), i);
+            wait(0);
+        }
+    }
+    return 0;
+}
+```
+
+## 3 getenv.c
+
+
+- 리눅스 시스템에는 환경변수가 있다. env라고 치면 나온다.
+- 이 환경변수는 key,value로 이루어져 있다.
+- 만약에 하나의 key에 여러값을 넣고 싶다라면 value를 : 로 구분해서 값을 넣어두었다.
+  예) PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+  
+  
+- 아래 코드는 환경변수를 출력해주는 예제.
+- argc 인자값 개수, argv ( char포인터형 을 여러 개(배열) 받는다. )
+- 참고) int arr[ ]로 int 형 배열을 매겨변수로 받을 수 있다. | char* argv 로 문자열 하나(사실 char포인터) 를 받을 수 있다. | char* argv[ ] 로 문자열 여러개를 받는다.
+- 해당 인자값으로 getenv 결과값을 : 로 토크나이져 해서 출력
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(int argc, char * argv[])
+{
+    int i, j=0;
+    char *env, *str;
+    char *tok[100], *saveptr;
+
+    if (argc == 1)  {
+        printf("usage: getenv env_vars ... \n");
+        return 0;
+    } else {
+
+        for (i = 0 ; i < argc-1 ; i++) {
+
+            env = getenv(argv[i+1]);
+            printf("%s=%s\n", argv[i+1], env);
+
+            for (j=0,str=env; ;str= NULL,j++) {
+                tok[j] = strtok_r(str, ":", &saveptr);
+                if (tok[j] == NULL) break;
+                printf("\t%s\n", tok[j]);
+            }
+
+            printf("***---------------------***\n");
+        }
+
+    }
+    return 0;
+}
+
+```
+
+## 4  strtok_r
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main(int argc, char * argv[])
+{
+    int i, j=0;
+    char *env, *str;
+    char *tok[100], *saveptr;
+    if (argc == 1)  {
+        printf("usage: getenv env_vars ... \n");
+        return 0;
+    } else {
+        for (i = 0 ; i < argc-1 ; i++) {
+
+
+            env = getenv(argv[i+1]);
+            printf("%s=%s\n", argv[i+1], env);
+
+
+            for (j=0,str=env; ;str= NULL,j++) {
+                tok[j] = strtok_r(str, ":", &saveptr);
+                if (tok[j] == NULL) break;
+                printf("\t%s\n", tok[j]);
+            }
+
+            printf("***---------------------***\n");
+        }
+    }
+    return 0;
+}
+```
+
+```c
+#include <string.h>
+#include <stdio.h>
+int main(int argc, char **argv)
+{
+    char command[] = "ls -al a*";
+    char *next_ptr;
+    char *sArr[10] = {
+        NULL,
+    };
+    char *str;
+    int j = 0;
+    // command 의 갯수와 , 그를 담는 문자열 배열
+    for (j = 0, str = command;; str = NULL, j++)
+    {
+        sArr[j] = strtok_r(str, " ", &next_ptr);
+        if (sArr[j] == NULL)
+            break;
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        if (sArr[i] != NULL)
+            printf("%s\n", sArr[i]);
+    }
+}
+```
+
+파라미터
+str
+    - delimiter단위로 분리할 문자열.
+    - NULL이면 saveptr 변수에서 저장하고 있던 이전에 호출한 위치 다음부터 분리작업을 진행합니다.
+  ※주의 : str문자열은 변경이 일어나기 때문에 원본 문자열을 보존하려면 
+          임시변수에 복사한 후 임시변수를 사용하기 바랍니다.
+delim
+    - 문자열을 분리할 delimiter 문자들. delim에 포함된 아무 문자라도 만나면 분리함.
+saveptr
+    - 다음처리를 위한 위치를 저장하는 pointer
+    - 이 변수는 직접 handling하지 않습니다
+ 
+RETURN
+NULL 아님
+    - 정상적으로 delimiter로 분리하였으며, 분리된 문자열의 시작 pointer를 return합니다.
+    
+NULL
+    - 분리할 데이터가 더 이상없습니다.
+ 
+활용 예제
+ 
+ ```c
+#include <string.h>
+#include <stdio.h>
+/* /또는 - 또는 : 또는 space를 delimiter로 사용합니다. */
+#define DELIM_CHARS     "/-: "
+int main(int argc, char **argv)
+{
+    char time[1024] = "2017-02-12 10:25:30";
+    char *ret_ptr;
+    char *next_ptr;
+    printf("time : [%s]\n", time);
+
+    ret_ptr = strtok_r(time, DELIM_CHARS, &next_ptr);
+    while(ret_ptr) {
+        printf("ret_ptr = [%s]\n", ret_ptr);
+        ret_ptr = strtok_r(NULL, DELIM_CHARS, &next_ptr);
+    }
+
+    return 0;
+}
+```
+결과:
+time : [2017-02-12 10:25:30]
+ret_ptr = [2017]
+ret_ptr = [02]
+ret_ptr = [12]
+ret_ptr = [10]
+ret_ptr = [25]
+ret_ptr = [30
+
+출처: [https://www.it-note.kr/86](https://www.it-note.kr/86) [IT 개발자 Note]
+
+## 4.2 C언어 문자열 연결
+
+```c
+#define _CRT_SECURE_NO_WARNINGS // strcpy 보안 경고로 인한 컴파일 에러 방지
+#include <stdio.h>
+#include <string.h> // strcat 함수가 선언된 헤더 파일
+#include <stdlib.h> // malloc, free 함수가 선언된 헤더 파일
+int main()
+{
+    char *s1 = "world";                           // 문자열 포인터
+    char *s2 = (char *)malloc(sizeof(char) * 20); // char 20개 크기만큼 동적 메모리 할당
+    strcpy(s2, "Hello"); // s2에 Hello 문자열 복사
+    strcat(s2, " ");
+    strcat(s2, s1); // s2 뒤에 s1을 붙임
+    printf("%s\n", s2); // Helloworld
+    free(s2); // 동적 메모리 해제
+    return 0;
+}
+```
+
+
+## 5. execv
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+ 
+int main(int argc, char **argv)
+{
+    printf("argument count is %d\n", argc);
+ 
+    int i=0;
+    printf("arugment list\n");
+    for(i=0; i< argc; i++)
+    {
+        printf("<%d>: %s\n", i, argv[i]);
+    }
+ 
+    return 0;
+}
+```
+
+
+```c
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+int main(int argc, char **argv)
+{
+    if(argc == 1)
+    {
+        printf("Usage: %s <exec path> , [arg0, arg1, arg2, ...]\n", argv[0]);
+        return 1;
+    }
+    pid_t pid = fork();
+    if(pid < 0)
+    {
+        perror("fork error");
+        return 1;
+    }
+    if(pid == 0)
+    {
+        wait(0);
+    }
+    else
+    {
+        execv(argv[1],argv+1);
+        return 0;
+    }
+    return 0;
+}
+```
+
+## 6 . make, makefile 리눅스 리눅스 c언어 makefile
+
+
+- make 명령어로 컴파일을 실행 ( make는 파일 관리 유틸리티 이다. )
+- makefile( 기술파일 ) 에 적힌대로 컴파일러에게 명령하여 shell 명령이 순차적으로 실행
+
+- 기존의 컴파일 과정이 여기서는 그리 귀찮지 않습니다. 모든 c파일을 각각 컴파일 해도 3번만 명령해 주면 되니까요. 하지만 만약 하나의 실행파일을 생성하는데 필요한 c파일이 1000개라면..?? 1000개의 명령어가 필요합니다. 이러한 상황을 해결해 주는 것이 바로 make 와 Makefile입니다!
+
+Makefile은 다음과 같은 구조를 가집니다.
+
+- 목적파일(Target) : 명령어가 수행되어 나온 결과를 저장할 파일
+- 의존성(Dependency) : 목적파일을 만들기 위해 필요한 재료
+- 명령어(Command) : 실행 되어야 할 명령어들
+- 매크로(macro) : 코드를 단순화 시키기 위한 방법
+
+
+```
+CC = gcc
+TARGET_MAIN = myshell
+TARGET_CHILD = child
+
+$(TARGET_MAIN) : 
+		$(CC) -o $(TARGET_MAIN) $(TARGET_MAIN).c && $(CC) -o $(TARGET_CHILD) $(TARGET_CHILD).c
+		
+clean	:
+		rm $(TARGET_MAIN) && rm $(TARGET_CHILD)
+				
+start	:$(TARGET_MAIN)
+		./$(TARGET_MAIN)
+
+build	:
+		make clean && make && make start
+```
+
+## 7. ls 명령어 그대로 실행하는 프로그램
+
+```
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+int main(int argc, char *argv[])
+{
+    char **new_argv;
+    char command[]  = "ls";
+    int  idx;
+    new_argv = (char **)malloc(sizeof(char *) * (argc + 1));
+
+    /* 명령어를 ls로 변경 */
+    new_argv[0] = command;
+
+    /* command line으로 넘어온 parameter를 그대로 사용 */
+    for(idx = 1; idx < argc; idx++) {
+        new_argv[idx] = argv[idx];
+    }
+
+    /* argc를 execve 파라미터에 전달할 수 없기 때문에 NULL이 파라미터의 끝을 의미함 */
+    new_argv[argc] = NULL;
+    if(execv("/usr/bin/ls", new_argv) == -1) {
+        fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
+        return 1;
+    }
+
+
+    /* ls 명령어 binary로 실행로직이 교체되었으므로 이후의 로직은 절대 실행되지 않습니다. */
+    printf("이곳이 이제 ls 명령어라 이 라인은 출력이 되지 않습니다.\n");
+    return 0;
+}
+--------------------------------------------------------------
+실행방법
+sample1 -al <enter>
+결과는 ls -al 한 것과 같음.
+```
 
 
 # 2020_os_hw1
