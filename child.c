@@ -8,7 +8,6 @@
 
 extern char **environ;
 
-
 int functionENV(int argc, char * argv[])
 {
 	int i, j=0;
@@ -28,40 +27,10 @@ int functionENV(int argc, char * argv[])
 				if (tok[j] == NULL) break;
 				printf("\t%s\n", tok[j]);
 			}
-			//printf("ENV END ---------------------\n");
 		}
 	}
 	return 0;
 }
-
-// int functionBasic(int argc, char **argv)
-// {
-// 	if(argc==1)
-// 		return -1;
-	
-// 	char* path = (char*)malloc(sizeof(char)*1000);
-// 	strcpy(path,"/bin/");
-// 	strcat(path,argv[1]);
-	
-// 	// for(int i = 2; i < argc;i++){
-// 	// 	strcat(path,argv[i]);
-// 	// }
-	
-// 	//printf("finall path: %s\n",path);
-// 	//printf("argv => \n");
-// 	// for(int i = 2; i < argc; i++){
-// 	// 	printf("%s\n",argv[i]);
-// 	// }
-// 	argv[argc] = NULL; //끝을 알림.
-
-//     if(execve(path, argv+1,environ) == -1) {
-//         //fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
-// 		free(path);
-//         return -1;
-//     }
-// 	free(path);
-//     return 0;
-// }
 
 int functionPATH(int argc,char **argv){
 	int i, j=0;
@@ -116,21 +85,15 @@ int functionPATH(int argc,char **argv){
 }
 
 int main(int argc,char **argv){
-	//printf("child process..\n");
-	// printf("child process.. argc %d\n",argc);
-	// for(int i = 0 ; i < argc; i++){
-	// 	printf("%d : %s \n",i,argv[i]);
-	// }
+
 	if(functionENV(argc,argv)==0){
 		return 0;
 	}
-	// if(functionBasic(argc,argv)==0){
-	// 	return 0;
-	// }
+
 	if(functionPATH(argc,argv)==0){
 		return 0;
 	}
-	printf("myshell %s command not found\n",argv[1]);
+	printf("myshell %s command not found😢\n",argv[1]);
 	
 	return -1;
 }
