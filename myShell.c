@@ -109,9 +109,8 @@ int main(int argc, char** argv) {
 			}
 			exit(0);
 		}
-		else {
-			wait(NULL);
-		}
+		wait(0);
+		
 
 		n_cBuf = 1;//값 초기화
 
