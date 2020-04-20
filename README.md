@@ -153,6 +153,215 @@ PWD=/workspace/OSLecture/hw1master
 ```
 
 
+# 프로그램 코드 설명
+
+## 1. 부모 프로세스
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern char **environ;
+char cwd[1024]; //실시간을 변경되는 현재 디렉터리 저장
+char cwd_init[1024]; // 초기 디렉터리 > 자식 파일
+char CHILD_PATH[1024];
+//명령어를 파싱한다 -> new_argv 문자열 배열(1번부터)에 각각 담는다. (뛰어쓰기,개행,,,탭 구분)
+void InputParsing(char *command, char **new_argv)
+{
+    int j;
+    char *str, *next_ptr;
+    for (int i = 0; i < 100; i++){
+        new_argv[i] = NULL;
+    }
+    for (j = 1, str = command;; str = NULL, j++){
+        new_argv[j] = strtok_r(str," ,\t\n", &next_ptr);
+        if (new_argv[j] == NULL || strcmp(new_argv[j],"\n")==0)
+            break;
+    }
+    return;
+}
+void init(){
+	getcwd(cwd_init, sizeof(cwd_init));
+	strcpy(CHILD_PATH,cwd_init);
+	strcat(CHILD_PATH,"/child");
+	return;
+}
+
+
+int main(int argc, char *argv[])
+{
+	puts("myshell powered by DOSIMPACT");
+	init();
+	pid_t pid;
+	int i;
+	char userInput[100];
+	//----------------------------------------------
+	char* saveptr;
+    char* new_argv[100] = {
+        NULL,
+    };
+	char* username = getenv("USER");
+	
+	while(1){
+		//char* pwd = getenv("PWD");
+		getcwd(cwd, sizeof(cwd));
+		printf("✅myshell:%s:%s#",username,cwd);
+		fgets(userInput,sizeof(userInput),stdin);
+		
+		if(strcmp(userInput,"quit\n")==0){
+			puts("MY SHELL EXIT THANKS..❤");
+			break;
+		}
+		if(strcmp(userInput,"\n")==0){
+			continue;
+		}
+
+
+		InputParsing(userInput, new_argv);
+		new_argv[0] = argv[0];
+		if(strcmp(new_argv[1],"cd")==0){
+			chdir(new_argv[2]) == 0;
+			continue;
+		}
+		pid = fork();
+		if(pid == -1){
+			perror("ERROR: fork fail");
+		}
+		else if(pid == 0){
+			// char resolved_path[1000];
+			// realpath(argv[0], resolved_path);
+			// printf("real path %s",resolved_path);
+			execve(CHILD_PATH,new_argv,environ);
+			exit(0);
+		}else{
+			wait(0);
+		}
+		
+	}
+
+	return 0;
+}
+
+
+
+```
+
+## 2. 자식 프로세스
+
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+
+extern char **environ;
+
+int functionENV(int argc, char * argv[])
+{
+	int i, j=0;
+	char *env, *str;
+	char *tok[100], *saveptr;
+	if (argc == 1)	{
+		//printf("usage: getenv env_vars ... \n");
+		return -1;
+	} else {
+		for (i = 0 ; i < argc-1 ; i++) {
+			env = getenv(argv[i+1]);
+			if(env == NULL)
+				return -1;
+			printf("%s=%s\n", argv[i+1], env);
+			for (j=0,str=env; ;str= NULL,j++) {
+				tok[j] = strtok_r(str, ":", &saveptr);
+				if (tok[j] == NULL) break;
+				printf("\t%s\n", tok[j]);
+			}
+		}
+	}
+	return 0;
+}
+
+int functionPATH(int argc,char **argv){
+	int i, j=0;
+	char *env, *str;
+	char *tok[100], *saveptr;
+	
+	if (argc == 1)	{
+		//printf("usage: getenv env_vars ... \n");
+		return -1;
+	} else {
+		
+		//절대경로라면 그대로 실행
+		if(argv[1][0]=='/'){
+			if(execv(argv[1],argv+1)==0){
+				return 0;
+			}
+		}
+		char* path = (char*)malloc(sizeof(char)*1000);
+		//그냥 파일만 있다라면 > 현재 디렉터리에서 실행해봄
+		char *pwd = getenv("PWD");
+		//printf("pwd : %s \n",pwd);
+		strcpy(path,pwd);
+		strcat(path,"/");
+		strcat(path,argv[1]);
+		if(execv(path,argv+1)==0){
+			free(path);
+			return 0;
+		}
+		
+		//그대도 실패하면 모든 환경변수에 등록된 PATH 탐색
+		env = getenv("PATH");
+		if(env == NULL)
+			return -1;
+		//printf("%s=%s\n","PATH", env);
+		
+		for (j=0,str=env; ;str= NULL,j++) {
+			tok[j] = strtok_r(str, ":", &saveptr);
+			if (tok[j] == NULL) break;
+			//printf("PATH : \t%s\n", tok[j]);
+			strcpy(path,tok[j]);
+			strcat(path,"/");
+			strcat(path,argv[1]);
+			//printf("final route %s\n",path);
+			if(execv(path,argv+1)==0){
+				free(path);
+				return 0;
+			}
+		}
+		free(path);
+	}
+	return -1;
+}
+
+int main(int argc,char **argv){
+
+	if(functionENV(argc,argv)==0){
+		return 0;
+	}
+
+	if(functionPATH(argc,argv)==0){
+		return 0;
+	}
+	printf("myshell %s command not found😢\n",argv[1]);
+	
+	return -1;
+}
+
+
+
+
+
+```
+
+
 # 프로그램에 사용된 코드 스니펫
 
 
