@@ -14,6 +14,7 @@ void type_prompt()
 	printf(" user name : %s user path : %s  present time : %d-%d-%d %d:%d:%d\n", getenv("USER"),getenv("PWD"),tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	printf("if you want to exit child process, press exit key\n");
 	printf("#");
+	first_time++;
 	}
 	else {
 		printf("#");
@@ -49,21 +50,18 @@ void read_command(char cmd[], char* par[])
 int main(void)
 {
 	char cmd[1000], command[100], * parameters[20]; //cmd, command는 명령어들을 저장하는 변수이다 .
-	char* envp[] = { (char*)"PATH=/bin",0 };  
+	char* envp[] = { (char*)"PATH=/BIN",0 };  
+	char quitsignal[100];
+	char* modifiedquitsignal;
     pid_t pid;
-    int i =0;  //프로세스 제어용 변수
-	type_prompt();
-	pid = fork();
-	int status;
-	int childpid;
-	char* quit;
     //무한루프 시작         
 	while (1) {
-		if (pid == -1) {
-			perror("fork error");
-			return 0;
+		pid = fork();
+		if (pid< 0)
+		{
+			wait(0);
 		}
-		if (pid == 0) {
+		else {
 			while (1) {
 				type_prompt();
 				read_command(command, parameters);
@@ -74,19 +72,15 @@ int main(void)
 					exit(0);
 			}
 		}
-		else {
-			childpid = wait(&status);
-			if (childpid > 0) {
-				printf("if you want to exit all process, press quit key\n");
-				gets(quit);
-				if (strcmp(quit,"quit") {
-					exit(0);
-				}
-				else {
-					fork();
-				}
-			}
+		printf("if you want to exit all process, press quit key")
+		fgets(quitsignal, 100, stdtin);
+		modifiedquitsignal = strtok(quitsignal,"\n")
+	    if (strcmp(modifiedquitsignal, "quit") == 0)
+		{
+			exit(0);
 		}
+
+
 	}
 	return 0;
 }
