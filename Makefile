@@ -8,8 +8,8 @@ $(TARGET_MAIN) :
 clean	:
 		rm $(TARGET_MAIN) && rm $(TARGET_CHILD)
 				
-complie	:
-		make
-		
 start	:$(TARGET_MAIN)
 		./$(TARGET_MAIN)
+
+build	:
+		make clean && make && make start

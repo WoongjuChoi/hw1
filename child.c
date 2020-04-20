@@ -34,75 +34,83 @@ int functionENV(int argc, char * argv[])
 	return 0;
 }
 
-int functionBasic(int argc, char **argv)
-{
-	if(argc==1)
-		return -1;
+// int functionBasic(int argc, char **argv)
+// {
+// 	if(argc==1)
+// 		return -1;
 	
-	char* path = (char*)malloc(sizeof(char)*1000);
-	strcpy(path,"/bin/");
-	strcat(path,argv[1]);
+// 	char* path = (char*)malloc(sizeof(char)*1000);
+// 	strcpy(path,"/bin/");
+// 	strcat(path,argv[1]);
 	
-	// for(int i = 2; i < argc;i++){
-	// 	strcat(path,argv[i]);
-	// }
+// 	// for(int i = 2; i < argc;i++){
+// 	// 	strcat(path,argv[i]);
+// 	// }
 	
-	//printf("finall path: %s\n",path);
-	//printf("argv => \n");
-	for(int i = 2; i < argc; i++){
-		printf("%s\n",argv[i]);
-	}
-	argv[argc] = NULL; //끝을 알림.
+// 	//printf("finall path: %s\n",path);
+// 	//printf("argv => \n");
+// 	// for(int i = 2; i < argc; i++){
+// 	// 	printf("%s\n",argv[i]);
+// 	// }
+// 	argv[argc] = NULL; //끝을 알림.
 
-    if(execve(path, argv+1,environ) == -1) {
-        //fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
-        return -1;
-    }
-
-    return 0;
-}
+//     if(execve(path, argv+1,environ) == -1) {
+//         //fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
+// 		free(path);
+//         return -1;
+//     }
+// 	free(path);
+//     return 0;
+// }
 
 int functionPATH(int argc,char **argv){
 	int i, j=0;
 	char *env, *str;
 	char *tok[100], *saveptr;
 	
-	char* path = (char*)malloc(sizeof(char)*1000);
-
-	 //char **new_argv = (char**)(malloc(sizeof(char*)*(argc)));
-	
-	// strcpy(new_argv[0],argv[0]);
-	// for(int k=2; k <argc; k++){
-	// 	strcpy(new_argv[k-1],argv[k]);
-	// }
-	
-	//printf("new argv\n");
-	// for(int k = 0 ; k < argc -1 ; k++){
-	// 	printf("%s\n",new_argv[k]);
-	// }
-	
 	if (argc == 1)	{
 		//printf("usage: getenv env_vars ... \n");
 		return -1;
 	} else {
+		
+		//절대경로라면 그대로 실행
+		if(argv[1][0]=='/'){
+			if(execv(argv[1],argv+1)==0){
+				return 0;
+			}
+		}
+		char* path = (char*)malloc(sizeof(char)*1000);
+		//그냥 파일만 있다라면 > 현재 디렉터리에서 실행해봄
+		char *pwd = getenv("PWD");
+		//printf("pwd : %s \n",pwd);
+		strcpy(path,pwd);
+		strcat(path,"/");
+		strcat(path,argv[1]);
+		if(execv(path,argv+1)==0){
+			free(path);
+			return 0;
+		}
+		
+		//그대도 실패하면 모든 환경변수에 등록된 PATH 탐색
 		env = getenv("PATH");
 		if(env == NULL)
 			return -1;
 		//printf("%s=%s\n","PATH", env);
+		
 		for (j=0,str=env; ;str= NULL,j++) {
 			tok[j] = strtok_r(str, ":", &saveptr);
 			if (tok[j] == NULL) break;
-			
 			//printf("PATH : \t%s\n", tok[j]);
-			
 			strcpy(path,tok[j]);
 			strcat(path,"/");
 			strcat(path,argv[1]);
 			//printf("final route %s\n",path);
 			if(execv(path,argv+1)==0){
-				break;
+				free(path);
+				return 0;
 			}
 		}
+		free(path);
 	}
 	return -1;
 }
@@ -116,13 +124,13 @@ int main(int argc,char **argv){
 	if(functionENV(argc,argv)==0){
 		return 0;
 	}
-	
-	if(functionBasic(argc,argv)==0){
-		return 0;
-	}
+	// if(functionBasic(argc,argv)==0){
+	// 	return 0;
+	// }
 	if(functionPATH(argc,argv)==0){
 		return 0;
 	}
+	printf("myshell %s command not found\n",argv[1]);
 	
 	return -1;
 }
@@ -140,3 +148,5 @@ int main(int argc,char **argv){
 //4. 환경변수 전달 하기 ㅜㅜ
 
 // export PATH=$PATH:/workspace/OSLecture/hw1master
+
+//   /workspace/OSLecture/hw1master/argv
