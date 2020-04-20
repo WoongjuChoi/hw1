@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h> // to use function strcmp()
+#include <dirent.h>
 
 void calculator(){
         int input = 0, a = 0, b = 0;
@@ -24,11 +25,41 @@ void calculator(){
 }
 
 void list(){
-        printf("\n\n\nlist : show the function list\n"
-                "cal : execute calculator\n\n\n\n");
+        printf("\n\n\nlist : Show the function list\n"
+                "cal : Execute calculator\n"
+                "cat : Read & print file\n"
+                "ls : Show the file in directory\n\n\n\n");
 }
 
+void file_list(){
+        DIR *dir_info;
+        struct dirent  *dir_entry;
 
+        dir_info = opendir( ".");
+        if(dir_info == NULL)
+                printf("Cannot read dir.info.\n");
+        if(dir_info != NULL){
+                while(dir_entry = readdir(dir_info)) {
+                        printf("%s\n", dir_entry->d_name);}}
+        closedir(dir_info);
+}
+
+void cat(){
+
+        char filename[256];
+        char str[1024];
+        FILE* asdf;
+        printf("Enter the File name: ");
+        scanf("%s", filename);
+        asdf = fopen(filename, "r");
+        if(!asdf){
+                printf("Failed");
+                exit(101);}
+        while(!feof(asdf)){
+            fgets(str, sizeof(str), asdf);
+            printf("%s", str);
+        }
+}
 
 int main(int argc, char *argv[])
 {
@@ -46,12 +77,16 @@ int main(int argc, char *argv[])
                         // child
                         printf("Enter a String: ");
                         scanf("%s", str);
-                        if (!strcmp(str, "cal")){
-                                calculator();}
-                        else if (!strcmp(str, "list")){
-                                list();}
-                        else {
-                                printf("%s is not exist.\n\n", str);}
+                        if (!strcmp(str, "cal"))
+                                calculator();
+                        else if (!strcmp(str, "list"))
+                                list();
+                        else if (!strcmp(str, "ls"))
+                                file_list();
+                        else if (!strcmp(str, "cat"))
+                                cat();
+                        else
+                                printf("%s is not exist.\n\n", str);
                         exit (0);
                 } else {
 
@@ -61,3 +96,4 @@ int main(int argc, char *argv[])
         }
         return 0;
 }
+
