@@ -110,7 +110,6 @@ int main(int argc, char** argv) {
 			exit(0);
 		}
 		wait(0);
-		
 
 		n_cBuf = 1;//값 초기화
 
