@@ -41,7 +41,7 @@ void current_time(){ //오류발생
 	
 
 	while(1){
-		current_time();
+		//current_time(); 오류발생
 		printf("JinHoShell#");
 		char *pwd;
 		char *user;
@@ -56,7 +56,7 @@ void current_time(){ //오류발생
 		inputArgv[0] = strtok(input," ");
 
 
-		int i =0;
+		int i=0;
 
 
 
