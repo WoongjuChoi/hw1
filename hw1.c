@@ -20,15 +20,13 @@ void  exec_process(char *path,char *argv[]){ //exec 실행 함수
 
 }
 
-/*
-void current_time(){ //미구현
-	char abc[100];
-	strcpy(abc,getenv("TIME"));
-	printf("%s",abc);
 
+void current_time(){ //오류발생
+	char *time;
+	time=getenv("TIME");
+	printf("%s\n",time);
 
-
-}*/
+}
 
  int main(int argc,char *argv[]){
 
@@ -43,6 +41,7 @@ void current_time(){ //미구현
 	
 
 	while(1){
+		current_time();
 		printf("JinHoShell#");
 		char *pwd;
 		char *user;
