@@ -53,33 +53,56 @@ int functionBasic(int argc, char **argv)
 		printf("%s\n",argv[i]);
 	}
 	argv[argc] = NULL; //끝을 알림.
-	
-    // char **new_argv;
-    // char command[]  = "ls";
-    // int  idx;
-
-    // new_argv = (char **)malloc(sizeof(char *) * (argc + 1));
-
-    // /* 명령어를 ls로 변경 */
-    // new_argv[0] = command;
-
-    // /* command line으로 넘어온 parameter를 그대로 사용 */
-    // for(idx = 1; idx < argc; idx++) {
-    //     new_argv[idx] = argv[idx];
-    // }
-
-    // /* argc를 execve 파라미터에 전달할 수 없기 때문에 NULL이 파라미터의 끝을 의미함 */
-    // new_argv[argc] = NULL;
 
     if(execve(path, argv+1,environ) == -1) {
         fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
-        return 1;
+        return -1;
     }
 
-    // /* ls 명령어 binary로 실행로직이 교체되었으므로 이후의 로직은 절대 실행되지 않습니다. */
-    // printf("이곳이 이제 ls 명령어라 이 라인은 출력이 되지 않습니다.\n");
-
     return 0;
+}
+
+int functionPATH(int argc,char **argv){
+	int i, j=0;
+	char *env, *str;
+	char *tok[100], *saveptr;
+	
+	
+	// char **new_argv = (char**)(malloc(sizeof(char*)*(argc)));
+	
+	// strcpy(new_argv[0],argv[0]);
+	// for(int k=2; k <argc; k++){
+	// 	strcpy(new_argv[k-1],argv[k]);
+	// }
+	
+	printf("new argv\n");
+	for(int k = 0 ; k < argc -1 ; k++){
+		printf("%s\n",new_argv[k]);
+	}
+	
+	if (argc == 1)	{
+		//printf("usage: getenv env_vars ... \n");
+		return -1;
+	} else {
+		env = getenv("PATH");
+		if(env == NULL)
+			return -1;
+		printf("%s=%s\n", argv[i+1], env);
+		for (j=0,str=env; ;str= NULL,j++) {
+			tok[j] = strtok_r(str, ":", &saveptr);
+			if (tok[j] == NULL) break;
+			printf("PATH : \t%s\n", tok[j]);
+			
+			strcat(tok[j],"/");
+			strcat(tok[j],argv[1]);
+			if(argc == 2)
+				execv(tok[j],argv+2);
+			else
+				execv(tok[j],argv+2);
+		}
+		
+	}
+	return 0;
 }
 
 int main(int argc,char **argv){
@@ -91,10 +114,15 @@ int main(int argc,char **argv){
 	if(functionENV(argc,argv)==0){
 		return 0;
 	}
-	printf("EXEC Basic command");
+	
 	if(functionBasic(argc,argv)==0){
 		return 0;
 	}
+	printf("EXEC Basic command\n");
+	if(functionPATH(argc,argv)==0){
+		return 0;
+	}
+	
 	return -1;
 }
 
