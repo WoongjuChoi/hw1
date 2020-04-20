@@ -54,33 +54,22 @@ int main(void)
 	char quitsignal[100];
 	char* modifiedquitsignal;
     pid_t pid;
+	pid = fork();
     //무한루프 시작         
 	while (1) {
-		pid = fork();
 		if (pid< 0)
 		{
 			wait(0);
 		}
 		else {
-			while (1) {
-				type_prompt();
-				read_command(command, parameters);
-				strcpy(cmd, "/bin/");
-				strcat(cmd, command);
-				execve(cmd, parameters, envp);
-				if (strcmp(command, "exit") == 0)
-					exit(0);
-			}
+			type_prompt();
+			read_command(command, parameters);
+			strcpy(cmd, "/bin/");
+			strcat(cmd, command);
+			execve(cmd, parameters, envp);
 		}
-		printf("if you want to exit all process, press quit key")
-		fgets(quitsignal, 100, stdtin);
-		modifiedquitsignal = strtok(quitsignal,"\n")
-	    if (strcmp(modifiedquitsignal, "quit") == 0)
-		{
+		if (strcmp(command, "exit") == 0)
 			exit(0);
-		}
-
-
 	}
 	return 0;
 }
