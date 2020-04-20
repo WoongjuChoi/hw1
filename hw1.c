@@ -39,7 +39,7 @@ int main()
 	int status;
 
 	pid = fork();
-	printf("-------------------hw1-------------------");
+	printf("-------------------hw1-------------------\n");
 	while (prompt(cBuf)) {
 		if (pid == -1) {
 			perror("fork error");
@@ -55,10 +55,11 @@ int main()
 			else {
 				if (strcmp(cBuf, "cd") == 0) {
 					chdir(arg);
-					_exit(0);
+					continue;
 				}
 				else if (strcmp(cBuf, "quit") == 0) {
-					exit(0);
+					printf("quit\n");
+					break;
 				}
 				else
 					execlp(cBuf, cBuf, arg, (char*)0);
