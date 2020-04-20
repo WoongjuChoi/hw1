@@ -12,6 +12,7 @@ void type_prompt()
 	time_t t = time(NULL);
     struct tm tm = *localtime(&t);
 	printf(" user name : %s user path : %s  present time : %d-%d-%d %d:%d:%d\n", getenv("USER"),getenv("PWD"),tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	printf("if you want to exit child process, press exit key\n");
 	printf("#");
 	}
 	else {
@@ -53,6 +54,9 @@ int main(void)
     int i =0;  //프로세스 제어용 변수
 	type_prompt();
 	pid = fork();
+	int status;
+	int childpid;
+	char* quit;
     //무한루프 시작         
 	while (1) {
 		if (pid == -1) {
@@ -60,17 +64,28 @@ int main(void)
 			return 0;
 		}
 		if (pid == 0) {
-			type_prompt();
-		    read_command(command, parameters);
-			strcpy(cmd, "/bin/");
-			strcat(cmd, command);
-			execve(cmd, parameters, envp);
-			if (strcmp(command, "exit") == 0)
-				exit(0);
+			while (1) {
+				type_prompt();
+				read_command(command, parameters);
+				strcpy(cmd, "/bin/");
+				strcat(cmd, command);
+				execve(cmd, parameters, envp);
+				if (strcmp(command, "exit") == 0)
+					exit(0);
+			}
 		}
 		else {
-			wait(0);
-			return 0;
+			childpid = wait(&status);
+			if (childpid > 0) {
+				printf("if you want to exit all process, press quit key\n");
+				gets(quit);
+				if (strcmp(quit,"quit") {
+					exit(0);
+				}
+				else {
+					fork();
+				}
+			}
 		}
 	}
 	return 0;
