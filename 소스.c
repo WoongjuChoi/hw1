@@ -10,56 +10,56 @@
 int main(int argc, char *argv[]) {
 		int i = 0;
 		char *stop = "quit";
-		bool Go, Shell_go = true;	//·çÇÁ¸¦ µ¹Áö ¾Èµ¹Áö¿¡ ´ëÇÑ ºÒ¸®¾È°ª.
+		bool Shell_go = true;	//ë£¨í”„ë¥¼ ëŒì§€ ì•ˆëŒì§€ì— ëŒ€í•œ ë¶ˆë¦¬ì•ˆê°’.
 		int state;
 		char str[80];
-		print("Shell ÇÁ·Î±×·¥ÀÇ Á¾·á¸¦ ¿øÇÒ ½Ã¿¡, 'Á¾·á'¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä. \n");
+		print("Shell í”„ë¡œê·¸ë¨ì˜ ì¢…ë£Œë¥¼ ì›í•  ì‹œì—, 'ì¢…ë£Œ'ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”. \n");
 		pid_t pid;
 
 		while (Shell_go) {
-				char FilenName[100];	//»ç¿ëÀÚ ÀÔ·Â ÆÄÀÏ ÀÌ¸§ ÀúÀå °ø°£
+				char FilenName[100];	//ì‚¬ìš©ì ì…ë ¥ íŒŒì¼ ì´ë¦„ ì €ì¥ ê³µê°„
 				scanf("%s", FilenName);
-				printf("Filie name : %s¸¦ °Ë»öÇÕ´Ï´Ù", FilenName);
+				printf("Filie name : %së¥¼ ê²€ìƒ‰í•©ë‹ˆë‹¤", FilenName);
 
 				char *Value;
 				Value = getenv(FilenName[1]);
 
 				if (Value != NULL)
 				{
-					printf("ÇØ´ç ÆÄÀÏ ( %s)À» Ã£¾Ò½À´Ï´Ù.\n ÇØ´ç ÆÄÀÏ È¯°æº¯¼ö : %s", FilenName, Value);
+					printf("í•´ë‹¹ íŒŒì¼ ( %s)ì„ ì°¾ì•˜ìŠµë‹ˆë‹¤.\n í•´ë‹¹ íŒŒì¼ í™˜ê²½ë³€ìˆ˜ : %s", FilenName, Value);
 				}
 
 
-					//1. fork¹ß½ÅÀÚÀÇ »çº» »ı¼º. (ºÎ¸ğ fork È£Ãâ - ÀÚ½Ä process ID ¹İÈ¯, ÀÚ½Ä fork È£Ãâ - 0 ¹İÈ¯
+					//1. forkë°œì‹ ìì˜ ì‚¬ë³¸ ìƒì„±. (ë¶€ëª¨ fork í˜¸ì¶œ - ìì‹ process ID ë°˜í™˜, ìì‹ fork í˜¸ì¶œ - 0 ë°˜í™˜
 
-				pid = fork();//fork »ı¼º
+				pid = fork();//fork ìƒì„±
 
-				if (pid < 0) {		//0º¸´Ù ÀÛÀ» °æ¿ì ¿¡·¯ (-1)
-					printf("PID ¿À·ù ¹ß»ı.\n");
+				if (pid < 0) {		//0ë³´ë‹¤ ì‘ì„ ê²½ìš° ì—ëŸ¬ (-1)
+					printf("PID ì˜¤ë¥˜ ë°œìƒ.\n");
 					return -1;
 
 				}
-				else if (pid == 0) {			//ÀÚ½Ä ÇÁ·Î¼¼½º
+				else if (pid == 0) {			//ìì‹ í”„ë¡œì„¸ìŠ¤
 					printf("child %d. id : %d\n", i, (long)getpid());
 					exit(0);
 				}
-				else {				//ºÎ¸ğ ÇÁ·Î¼¼½º
+				else {				//ë¶€ëª¨ í”„ë¡œì„¸ìŠ¤
 					printf("parent  id : %d\n", (long)getpid());
 					wait(0);
 				}
 			
 
 	
-				printf("Á¾·á¸¦ ¿øÇÒ ½Ã¿¡´Â, 'quit'¹®ÀÚ¿­À» ÀÔ·ÂÇØÁÖ¼¼¿ä.\n");
+				printf("ì¢…ë£Œë¥¼ ì›í•  ì‹œì—ëŠ”, 'quit'ë¬¸ìì—´ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.\n");
 				scanf("%s", str);
 
 				if (strcmp(str, stop) == 0) {
-					printf("ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù.\n");
+					printf("í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.\n");
 					Shell_go = false;
 
 				}
 				else {
-					print("°è¼ÓÇØ¼­ ÇÁ·Î±×·¥À» ½ÇÇàÇÕ´Ï´Ù.\n");
+					print("ê³„ì†í•´ì„œ í”„ë¡œê·¸ë¨ì„ ì‹¤í–‰í•©ë‹ˆë‹¤.\n");
 					i++;
 				}
 
