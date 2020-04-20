@@ -1,5 +1,5 @@
 CC = gcc
-TARGET = myshell
+TARGET = child
 $(TARGET) : 
 		$(CC) -o $(TARGET) $(TARGET).c
 		
