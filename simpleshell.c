@@ -4,24 +4,24 @@
 #include <unistd.h>
 #include <string.h>
 
-void read_command (char cmd[], char *par[] ){
-	char line[1024];
-	int count =0, i=0, j=0;
-	char *array[100], *pch;
+void read_command_function (char cmd[], char *par[] ){
+	char line[1000];
+	int count =0,i=0,j=0;
+	char *array[100], *p_ch;
 
 	//Read one line
-	for( ;;){
+	while(1){
 		int c= fgetc (stdin);
 		line[count++] =(char) c;
 		if (c=='\n') break;
 	}
 	if (count ==1) return;
-	pch = strtok (line, " \n");
+	p_ch = strtok (line, " \n");
 
 	//parse the line into words
-	while( pch !=NULL){
-		array[i++] = strdup (pch);
-		pch= strtok(NULL, "\n");
+	while( p_ch !=NULL){
+		array[i++] = strdup (p_ch);
+		p_ch= strtok(NULL, "\n");
 	}
 	//first word is command
 	strcpy(cmd, array[0]);
@@ -44,11 +44,11 @@ void type_prompt(){
 
 int main()
 {
-	char cmd[100], command[100], *parameters[20];
+	char cmd[120], command[120], *parameters[5];
 	char *envp[] ={ (char *) "PATH=/bin", 0}; //environment variable
 	while(1) {	//repeat 
 		type_prompt(); //display prompt
-		read_command ( command, parameters); //terminal에서 input받음
+		read_command_function ( command, parameters); //terminal에서 input받음
 		if(fork()!=0) //parent process
 			wait(NULL);
 		else {
@@ -58,6 +58,7 @@ int main()
 		}
 		if (strcmp (command, "quit" ) ==0)
 			break;
+
 	}
 	return 0;
 }
