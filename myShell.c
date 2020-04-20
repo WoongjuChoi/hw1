@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
 
 		printf("[%s]%s(%s)$", now, uBuf, dBuf);
 
-		if (cBuf[0] == 1) {
+		if (n_cBuf == 1) {
 			fgets(cBuf, sizeof(cBuf), stdin);  //명령어 입력
 			ncBuf[0] = strtok(cBuf, " ");		//명령어 나누기
 			//argument 더하기
