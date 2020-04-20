@@ -54,7 +54,7 @@ void cat(){
         asdf = fopen(filename, "r");
         if(!asdf){
                 printf("Failed");
-                exit(101);}
+                exit(1);}
         while(!feof(asdf)){
             fgets(str, sizeof(str), asdf);
             printf("%s", str);
