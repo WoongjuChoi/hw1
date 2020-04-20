@@ -24,8 +24,7 @@ void *prompt(char cBuf[]) {//프롬포트 출력, 사용자로부터 문자열 �
 	getcwd(dBuf, MAX_BUF_SIZE); // save directoryname to dBuf
 
 	printf("[%s]%s@%s(%s)$ ", now, hBuf, uBuf, dBuf); // print out prompt
-													  // get command string and save return value to ret pointer variable.
-													  // if fgets fails, it returns NULL
+			            
 	ret = fgets(cBuf, MAX_BUF_SIZE, stdin);
 	//\n을 null charactor로 변환시켜주므로 string으로 인식
 	if (cBuf[strlen(cBuf) - 1] == '\n')
@@ -43,7 +42,7 @@ int main()
 
 	while (prompt(cBuf)) { // while successful input
 						   
-		if ((pid = fork()) < 0) {// pid 는 0보다 크거나 같아야한다.
+		if ((pid = fork()) < 0) {// pid 는 0보다 크거나 같아야한다. 아닐시:
 			perror("fork error");//에러발생
 		}
 		else if (pid == 0) { // 자식의 경우
