@@ -3,18 +3,17 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
-#include <time.h>
 
 
 //프롬프트 함수
 void type_prompt()
 { 
 	static int firsttime = 1;
-	if(firstime) {
-		printf("first time PATH : %d USER : %d ",getenv("USER"), getenv("PATH"));
+	if(firsttime) {
+		printf("first time USER : %s PATH : %s \n ",getenv("USER"), getenv("PATH"));
 		firsttime =0;     
 	}          
-	printf("#");
+	printf("$");
 }
 //사용자 명령 읽기
 void read_command(char cmd[], char* par[])
@@ -56,7 +55,7 @@ int main(void)
 			wait(NULL); // 부모 프로세스는 대기
 		else
 		{
-			strcpy(cmd "/bin/"); //bin 디렉토리를 복사함
+			strcpy(cmd, "/bin/"); //bin 디렉토리를 복사함
 			strcat(cmd, command); //사용자 명령 합쳐줌
 			execve(cmd, parameters, envp); // 명령을 실행
 		}
