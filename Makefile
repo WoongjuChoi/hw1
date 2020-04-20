@@ -1,7 +1,13 @@
 CC = gcc
-
-myshell : 
-		gcc -o myshell myshell.c
+TARGET = myshell
+$(TARGET) : 
+		$(CC) -o $(TARGET) $(TARGET).c
 		
-clean :
-		rm *.o myshell
+clean	:
+		rm $(TARGET)
+				
+complie	:
+		make
+		
+start	:$(TARGET)
+		./$(TARGET)
