@@ -11,7 +11,7 @@ void *prompt(char cBuf[]) {//프롬포트 출력, 사용자로부터 문자열 �
 	struct tm *timeinfo;
 	char hBuf[MAX_BUF_SIZE], uBuf[MAX_BUF_SIZE], dBuf[MAX_BUF_SIZE];
 	char *now;
-	void *ret;
+	void *pointer;
 
 	time(&rawtime); // 시간
 	timeinfo = localtime(&rawtime); // 시간을 구조체로 변환
@@ -25,12 +25,12 @@ void *prompt(char cBuf[]) {//프롬포트 출력, 사용자로부터 문자열 �
 
 	printf("[%s]%s@%s(%s)$ ", now, hBuf, uBuf, dBuf); // print out prompt
 			            
-	ret = fgets(cBuf, MAX_BUF_SIZE, stdin);
+	pointer = fgets(cBuf, MAX_BUF_SIZE, stdin);
 	//\n을 null charactor로 변환시켜주므로 string으로 인식
 	if (cBuf[strlen(cBuf) - 1] == '\n')
 		cBuf[strlen(cBuf) - 1] = 0;
 
-	return ret;
+	return pointer;
 }
 
 int main()
