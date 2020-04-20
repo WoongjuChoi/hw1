@@ -11,7 +11,9 @@ int argv;
 char *ret_ptr;
 char *next_ptr;
 char *arg[MAX];
+
 int main() {
+
     char buf[MAX];
     char*value;
     pid_t pid;
@@ -26,7 +28,7 @@ int main() {
 		continue;
 
 	tockenize(buf);
-
+	
 	//PATH, USER, time, ...
 	value = getenv(buf);
 	if(value!=NULL){
