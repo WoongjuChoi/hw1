@@ -1,13 +1,15 @@
 CC = gcc
-TARGET = child
-$(TARGET) : 
-		$(CC) -o $(TARGET) $(TARGET).c
+TARGET_MAIN = myshell
+TARGET_CHILD = child
+
+$(TARGET_MAIN) : 
+		$(CC) -o $(TARGET_MAIN) $(TARGET_MAIN).c && $(CC) -o $(TARGET_CHILD) $(TARGET_CHILD).c
 		
 clean	:
-		rm $(TARGET)
+		rm $(TARGET_MAIN) && rm $(TARGET_CHILD)
 				
 complie	:
 		make
 		
-start	:$(TARGET)
-		./$(TARGET)
+start	:$(TARGET_MAIN)
+		./$(TARGET_MAIN)

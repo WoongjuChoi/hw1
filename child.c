@@ -28,7 +28,7 @@ int functionENV(int argc, char * argv[])
 				if (tok[j] == NULL) break;
 				printf("\t%s\n", tok[j]);
 			}
-			printf("ENV END ---------------------\n");
+			//printf("ENV END ---------------------\n");
 		}
 	}
 	return 0;
@@ -47,15 +47,15 @@ int functionBasic(int argc, char **argv)
 	// 	strcat(path,argv[i]);
 	// }
 	
-	printf("finall path: %s\n",path);
-	printf("argv => \n");
+	//printf("finall path: %s\n",path);
+	//printf("argv => \n");
 	for(int i = 2; i < argc; i++){
 		printf("%s\n",argv[i]);
 	}
 	argv[argc] = NULL; //끝을 알림.
 
     if(execve(path, argv+1,environ) == -1) {
-        fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
+        //fprintf(stderr, "프로그램 실행 error: %s\n", strerror(errno));
         return -1;
     }
 
@@ -67,18 +67,19 @@ int functionPATH(int argc,char **argv){
 	char *env, *str;
 	char *tok[100], *saveptr;
 	
-	
-	// char **new_argv = (char**)(malloc(sizeof(char*)*(argc)));
+	char* path = (char*)malloc(sizeof(char)*1000);
+
+	 //char **new_argv = (char**)(malloc(sizeof(char*)*(argc)));
 	
 	// strcpy(new_argv[0],argv[0]);
 	// for(int k=2; k <argc; k++){
 	// 	strcpy(new_argv[k-1],argv[k]);
 	// }
 	
-	printf("new argv\n");
-	for(int k = 0 ; k < argc -1 ; k++){
-		printf("%s\n",new_argv[k]);
-	}
+	//printf("new argv\n");
+	// for(int k = 0 ; k < argc -1 ; k++){
+	// 	printf("%s\n",new_argv[k]);
+	// }
 	
 	if (argc == 1)	{
 		//printf("usage: getenv env_vars ... \n");
@@ -87,30 +88,31 @@ int functionPATH(int argc,char **argv){
 		env = getenv("PATH");
 		if(env == NULL)
 			return -1;
-		printf("%s=%s\n", argv[i+1], env);
+		//printf("%s=%s\n","PATH", env);
 		for (j=0,str=env; ;str= NULL,j++) {
 			tok[j] = strtok_r(str, ":", &saveptr);
 			if (tok[j] == NULL) break;
-			printf("PATH : \t%s\n", tok[j]);
 			
-			strcat(tok[j],"/");
-			strcat(tok[j],argv[1]);
-			if(argc == 2)
-				execv(tok[j],argv+2);
-			else
-				execv(tok[j],argv+2);
+			//printf("PATH : \t%s\n", tok[j]);
+			
+			strcpy(path,tok[j]);
+			strcat(path,"/");
+			strcat(path,argv[1]);
+			//printf("final route %s\n",path);
+			if(execv(path,argv+1)==0){
+				break;
+			}
 		}
-		
 	}
-	return 0;
+	return -1;
 }
 
 int main(int argc,char **argv){
 	//printf("child process..\n");
-	printf("child process.. argc %d\n",argc);
-	for(int i = 0 ; i < argc; i++){
-		printf("%d : %s \n",i,argv[i]);
-	}
+	// printf("child process.. argc %d\n",argc);
+	// for(int i = 0 ; i < argc; i++){
+	// 	printf("%d : %s \n",i,argv[i]);
+	// }
 	if(functionENV(argc,argv)==0){
 		return 0;
 	}
@@ -118,7 +120,6 @@ int main(int argc,char **argv){
 	if(functionBasic(argc,argv)==0){
 		return 0;
 	}
-	printf("EXEC Basic command\n");
 	if(functionPATH(argc,argv)==0){
 		return 0;
 	}
@@ -138,3 +139,4 @@ int main(int argc,char **argv){
 
 //4. 환경변수 전달 하기 ㅜㅜ
 
+// export PATH=$PATH:/workspace/OSLecture/hw1master
