@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #define MAX 256
-void tockenize(char*);
+void tokenize(char*);
 void cd(char*);
 int argv;
 char *ret_ptr;
@@ -27,7 +27,7 @@ int main() {
 	if(buf[0]=='\n')	//enter처리
 		continue;
 
-	tockenize(buf);
+	tokenize(buf);
 	
 	//PATH, USER, time, ...
 	value = getenv(buf);
@@ -61,7 +61,7 @@ int main() {
     return 0;
 }
 
-void tockenize(char buf[MAX]){
+void tokenize(char buf[MAX]){
 	static const char delim[] = " \t\n";
 	argv = 0;
 	ret_ptr = strtok_r(buf, delim, &next_ptr);
