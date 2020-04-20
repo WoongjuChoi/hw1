@@ -54,3 +54,8 @@ int main(void)
                         printf("cd 메소드 호출 \n");
                         procCd(output);
                 }
+                  else
+                {
+                        printf("잘못된 명령어입니다. 다시입력해주세요.");
+                }
+                                    
